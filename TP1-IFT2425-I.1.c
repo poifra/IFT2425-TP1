@@ -24,6 +24,7 @@
 //------------------------------------------------
 #define CARRE(X) ((X)*(X))
 #define CUBE(X)  ((X)*(X)*(X))
+#define 
 
 //-------------------------
 //--- Windows -------------
@@ -125,16 +126,18 @@ XImage* cree_Ximage(float** mat, int z, int length, int width)
 		lgth = length * z;
 		wdth = width * z;
 
-		dat = (unsigned char*)malloc(lgth * (wdth * 4) * sizeof(unsigned char));
+		dat = (unsigned char*) malloc(lgth * (wdth * 4) * sizeof(unsigned char));
 		if (dat == NULL)
 		{	printf("Impossible d'allouer de la memoire.");
 			exit(-1);
 		}
 
-		for (lig = 0; lig < lgth; lig = lig + z) for (col = 0; col < wdth; col = col + z)
+		for (lig = 0; lig < lgth; lig = lig + z) 
+			for (col = 0; col < wdth; col = col + z)
 			{
 				pix = (unsigned char)mat[lig / z][col / z];
-				for (zoom_lig = 0; zoom_lig < z; zoom_lig++) for (zoom_col = 0; zoom_col < z; zoom_col++)
+				for (zoom_lig = 0; zoom_lig < z; zoom_lig++) 
+					for (zoom_col = 0; zoom_col < z; zoom_col++)
 					{
 						dat[((lig + zoom_lig)*wdth * 4) + ((4 * (col + zoom_col)) + 0)] = pix;
 						dat[((lig + zoom_lig)*wdth * 4) + ((4 * (col + zoom_col)) + 1)] = pix;
@@ -159,17 +162,18 @@ XImage* cree_Ximage(float** mat, int z, int length, int width)
 		}
 
 		for (lig = 0; lig < (lgth * z); lig = lig + z) for (col = 0; col < (wdth * z); col = col + z)
-			{
-				somme = 0.0;
-				for (zoom_lig = 0; zoom_lig < z; zoom_lig++) for (zoom_col = 0; zoom_col < z; zoom_col++)
-						somme += mat[lig + zoom_lig][col + zoom_col];
+		{
+			somme = 0.0;
+			for (zoom_lig = 0; zoom_lig < z; zoom_lig++) 
+				for (zoom_col = 0; zoom_col < z; zoom_col++)
+					somme += mat[lig + zoom_lig][col + zoom_col];
 
-				somme /= (z * z);
-				dat[((lig / z)*wdth * 4) + ((4 * (col / z)) + 0)] = (unsigned char)somme;
-				dat[((lig / z)*wdth * 4) + ((4 * (col / z)) + 1)] = (unsigned char)somme;
-				dat[((lig / z)*wdth * 4) + ((4 * (col / z)) + 2)] = (unsigned char)somme;
-				dat[((lig / z)*wdth * 4) + ((4 * (col / z)) + 3)] = (unsigned char)somme;
-			}
+			somme /= (z * z);
+			dat[((lig / z)*wdth * 4) + ((4 * (col / z)) + 0)] = (unsigned char)somme;
+			dat[((lig / z)*wdth * 4) + ((4 * (col / z)) + 1)] = (unsigned char)somme;
+			dat[((lig / z)*wdth * 4) + ((4 * (col / z)) + 2)] = (unsigned char)somme;
+			dat[((lig / z)*wdth * 4) + ((4 * (col / z)) + 3)] = (unsigned char)somme;
+		}
 	} /*--------------------------------------------------------*/
 
 	imageX = XCreateImage(display, visual, depth, ZPixmap, 0, (char*)dat, wdth, lgth, 16, wdth * 4);
@@ -198,7 +202,8 @@ float** fmatrix_allocate_2d(int vsize, int hsize)
 
 	matrix = new float*[vsize];
 	imptr = new  float[(hsize) * (vsize)];
-	for (int i = 0; i < vsize; i++, imptr += hsize) matrix[i] = imptr;
+	for (int i = 0; i < vsize; i++, imptr += hsize) 
+		matrix[i] = imptr;
 	return matrix;
 }
 
@@ -245,7 +250,8 @@ void SaveImagePgm(char* bruit, char* name, float** mat, int lgth, int wdth)
 	fprintf(fic, "\n255\n");
 
 	//--enregistrement--
-	for (i = 0; i < lgth; i++) for (j = 0; j < wdth; j++)
+	for (i = 0; i < lgth; i++) 
+		for (j = 0; j < wdth; j++)
 			fprintf(fic, "%c", (char)mat[i][j]);
 
 	//--fermeture fichier--
@@ -263,19 +269,26 @@ void Recal(float** mat, int lgth, int wdth)
 
 //Recherche du min
 	min = mat[0][0];
-	for (i = 0; i < lgth; i++) for (j = 0; j < wdth; j++)
-			if (mat[i][j] < min) min = mat[i][j];
+	for (i = 0; i < lgth; i++) 
+		for (j = 0; j < wdth; j++)
+			if (mat[i][j] < min) 
+				min = mat[i][j];
 
 	//plus min
-	for (i = 0; i < lgth; i++) for (j = 0; j < wdth; j++) mat[i][j] -= min;
+	for (i = 0; i < lgth; i++) 
+		for (j = 0; j < wdth; j++) 
+			mat[i][j] -= min;
 
 	//Recherche du max
 	max = mat[0][0];
-	for (i = 0; i < lgth; i++) for (j = 0; j < wdth; j++)
-			if (mat[i][j] > max) max = mat[i][j];
+	for (i = 0; i < lgth; i++)
+		for (j = 0; j < wdth; j++)
+			if (mat[i][j] > max) 
+				max = mat[i][j];
 
 	//Recalibre la matrice
-	for (i = 0; i < lgth; i++) for (j = 0; j < wdth; j++)
+	for (i = 0; i < lgth; i++)
+		for (j = 0; j < wdth; j++)
 			mat[i][j] *= (255 / max);
 }
 
@@ -295,24 +308,34 @@ void Egalise(float** img, int lgth, int wdth, int thresh)
 
 	nb = 0;
 	for (i = 0; i < lgth; i++) for (j = 0; j < wdth; j++)
-		{	tmp = img[i][j];
-			if (tmp > thresh) { HistoNg[(int)(tmp)]++; nb++; }
+	{	tmp = img[i][j];
+		if (tmp > thresh)
+		{ 
+			HistoNg[(int)(tmp)]++; nb++; 
 		}
-
-	for (i = 0; i < 256; i++)  HistoNg[i] /= (float)(nb);
-
-//Calcul Fnct Repartition
-	for (i = 0; i < 256; i++) FnctRept[i] = 0.0;
-
-	for (i = 0; i < 256; i++)
-	{	if (i > 0)  FnctRept[i] = FnctRept[i - 1] + HistoNg[i];
-		else      FnctRept[i] = FnctRept[i];
 	}
 
-	for (i = 0; i < 256; i++) FnctRept[i] = (int)((FnctRept[i] * 255) + 0.5);
+	for (i = 0; i < 256; i++)  
+		HistoNg[i] /= (float)(nb);
+
+//Calcul Fnct Repartition
+	for (i = 0; i < 256; i++) 
+		FnctRept[i] = 0.0;
+
+	for (i = 0; i < 256; i++)
+	{	
+		if (i > 0)  
+			FnctRept[i] = FnctRept[i - 1] + HistoNg[i];
+		else      
+			FnctRept[i] = FnctRept[i];
+	}
+
+	for (i = 0; i < 256; i++) 
+		FnctRept[i] = (int)((FnctRept[i] * 255) + 0.5);
 
 //Egalise
-	for (i = 0; i < lgth; i++) for (j = 0; j < wdth; j++)
+	for (i = 0; i < lgth; i++) 
+		for (j = 0; j < wdth; j++)
 			img[i][j] = FnctRept[(int)(img[i][j])];
 }
 
@@ -342,14 +365,18 @@ int main(int argc, char** argv)
 	zoom = 1;
 
 //Init
-	for (i = 0; i < length; i++) for (j = 0; j < width; j++) Graph2D[i][j] = 0.0;
+	for (i = 0; i < length; i++) 
+		for (j = 0; j < width; j++) 
+			Graph2D[i][j] = 0.0;
 
 //--------------------------------------------------------------------------------
 // PROGRAMME ---------------------------------------------------------------------
 //--------------------------------------------------------------------------------
 
 //Affichage dégradé de niveaux de gris dans Graph2D
-	for (int i = 0; i < length; i++) for (int j = 0; j < width; j++) Graph2D[i][j] = j / 2.0;
+	for (int i = 0; i < length; i++) 
+		for (int j = 0; j < width; j++) 
+			Graph2D[i][j] = j / 2.0;
 
 
 	//---------------------------
@@ -400,7 +427,8 @@ int main(int argc, char** argv)
 				flag_graph = 0;
 				break;
 			}
-			if (!flag_graph) break;
+			if (!flag_graph) 
+				break;
 		}
 	}
 
