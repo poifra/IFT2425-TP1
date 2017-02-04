@@ -24,7 +24,6 @@
 //------------------------------------------------
 #define CARRE(X) ((X)*(X))
 #define CUBE(X)  ((X)*(X)*(X))
-#define 
 
 //-------------------------
 //--- Windows -------------
@@ -292,6 +291,14 @@ void Recal(float** mat, int lgth, int wdth)
 			mat[i][j] *= (255 / max);
 }
 
+float f(float x)
+{
+	return 0.0;
+}
+float df(float x, float epsilon)
+{
+	return (f(x+epsilon) - f(x))/epsilon;
+}
 //----------------------------------------------------------
 //  Egalisation Histogramme
 //----------------------------------------------------------
@@ -304,13 +311,14 @@ void Egalise(float** img, int lgth, int wdth, int thresh)
 	float FnctRept[256];
 
 //Calcul Histogramme Ng
-	for (i = 0; i < 256; i++) HistoNg[i] = 0.0;
+	for (i = 0; i < 256; i++) 
+		HistoNg[i] = 0.0;
 
 	nb = 0;
 	for (i = 0; i < lgth; i++) for (j = 0; j < wdth; j++)
 	{	tmp = img[i][j];
 		if (tmp > thresh)
-		{ 
+		{
 			HistoNg[(int)(tmp)]++; nb++; 
 		}
 	}
@@ -384,7 +392,13 @@ int main(int argc, char** argv)
 	//---------------------------
 
 	//implementer ici
+	float epsilon = 0.000001;
+	float x0 = 0.25, x1;
+	int maxIter = 10;
+	for (int i = 0; i < maxIter; i++)
+	{
 
+	}
 
 
 
@@ -399,8 +413,9 @@ int main(int argc, char** argv)
 	if (flag_graph)
 	{
 //ouverture session graphique
-		if (open_display() < 0) printf(" Impossible d'ouvrir une session graphique");
-		sprintf(nomfen_ppicture, "Graphe : ", "");
+		if (open_display() < 0) 
+			printf(" Impossible d'ouvrir une session graphique");
+		sprintf(nomfen_ppicture, "Graphe : ");
 		win_ppicture = fabrique_window(nomfen_ppicture, 10, 10, width, length, zoom);
 		x_ppicture = cree_Ximage(Graph2D, zoom, length, width);
 
