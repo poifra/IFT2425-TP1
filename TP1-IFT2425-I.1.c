@@ -44,7 +44,7 @@ double f(double* y, int N, double x)
         sumB += pow_yi_x;
         sumC += ln_yi;
     }
-    return (sumA / sumB) - (1 / x) - (1 / N) * sumC;
+    return (sumA / sumB) - (1 / x) - (1 / (double)N) * sumC;
 }
 /* When differentiating over c, the third sum disappears; we also have that
 there is quotient of functions and so we have (f/g)' = (f'g - fg')/g².
@@ -80,11 +80,11 @@ double df_epsilon_a(double* y, int N, double x)
 }
 double df_epsilon_b(double* y, int N, double x)
 {
-    return (- f(y, N, x + 2 * epsilon)
-            + 8 * f(y, N, x + epsilon)
-            - 8 * f(y, N, x - epsilon)
-            + f(y, N, x - 2 * epsilon)
-        ) / (12 * epsilon);
+    return (- f(y, N, x + 2.0 * epsilon)
+            + 8.0 * f(y, N, x + epsilon)
+            - 8.0 * f(y, N, x - epsilon)
+            + f(y, N, x - 2.0 * epsilon)
+        ) / (12.0 * epsilon);
 }
 
 double approximate_newton(
@@ -97,7 +97,7 @@ double approximate_newton(
     {
         double val = f(y, N, x);
         if (fabs(target - val) < tolerance) {
-            printf("acheived tolerance after %i iteration(s)\n", (i+1));
+            printf("acheived tolerance after %i iteration(s) with result %f\n", (i+1), val);
             break;
         }
         x = x - val/(*df)(y, N, x);
@@ -119,13 +119,13 @@ int main(int argc, char** argv)
     int maxIter = 100;
 
     printf("1.a) using simple epsilon ...\n");
-    printf("result is %f\n", approximate_newton(*df_epsilon_a, y, N, x0, target, tolerance, maxIter));
+    printf("c_mv is %f\n", approximate_newton(*df_epsilon_a, y, N, x0, target, tolerance, maxIter));
 
-    printf("1.b) using fancy epsilon ...\n");
-    printf("result is %f\n", approximate_newton(*df_epsilon_b, y, N, x0, target, tolerance, maxIter));
+    printf("\n1.b) using fancy epsilon ...\n");
+    printf("c_mv is %f\n", approximate_newton(*df_epsilon_b, y, N, x0, target, tolerance, maxIter));
 
-    printf("1.c) using actual differentiate ...\n");
-    printf("result is %f\n", approximate_newton(*df, y, N, x0, target, tolerance, maxIter));
+    printf("\n1.c) using actual differentiate ...\n");
+    printf("c_mv is %f\n", approximate_newton(*df, y, N, x0, target, tolerance, maxIter));
 
     //retour sans problème
     return 0;
