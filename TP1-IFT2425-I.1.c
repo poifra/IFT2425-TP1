@@ -1,6 +1,6 @@
 //------------------------------------------------------
 // module  : Tp-IFT2425-I.1.c
-// author  : Fran�ois Poitras & Guillaume No�l-Martel
+// author  : François Poitras & Guillaume Noël-Martel
 // date    :
 // version : 1.0
 // language: C
@@ -47,7 +47,7 @@ double f(double* y, int N, double x)
     return (sumA / sumB) - (1 / x) - (1 / (double)N) * sumC;
 }
 /* When differentiating over c, the third sum disappears; we also have that
-there is quotient of functions and so we have (f/g)' = (f'g - fg')/g�.
+there is quotient of functions and so we have (f/g)' = (f'g - fg')/g².
 We have that the term (y_i^c)' = ln(y_i)*y_i^c which is coincidently the
 same term as the first sum, we thus have that g' = f and the term of f' is
 ln(y_i)^2*y_i^c.
@@ -96,7 +96,7 @@ double approx_newton(double (*df)(double*, int, double),
     {
         double val = f(y, N, x);
         if (fabs(target - val) < tolerance) {
-            printf("acheived tolerance after %i iteration(s)\n", (i+1));
+            printf("Tolérance atteinte après %i itérations\n", (i+1));
             break;
         }
         x = x - val/(*df)(y, N, x);
@@ -117,18 +117,19 @@ int main(int argc, char** argv)
     double x0 = 0.25, target = 0, tolerance = 10E-6;
     int maxIter = 100;
 
+    printf("Évaluation de c_mv à l'aide de l'algorithme de Newton:\n");
 
-    printf("1.a) using simple epsilon ...\n");
+    printf("1.a)\nUtilisant un epsilon simple ...\n");
     double c_mv_a = approx_newton(*df_epsilon_a, y, N, x0, target, tolerance, maxIter);
-    printf("c_mv is %f\n", c_mv_a);
+    printf("c_mv = %f\n", c_mv_a);
 
-    printf("\n1.b) using fancy epsilon ...\n");
+    printf("1.b)\nUtilisant un epsilon plus compliqué ...\n");
     double c_mv_b = approx_newton(*df_epsilon_b, y, N, x0, target, tolerance, maxIter);
-    printf("c_mv is %f\n", c_mv_b);
+    printf("c_mv = %f\n", c_mv_b);
 
-    printf("\n1.c) using actual differentiate ...\n");
+    printf("1.c)\nUtilisant la dérivée analytique ...\n");
     double c_mv_c = approx_newton(*df, y, N, x0, target, tolerance, maxIter);
-    printf("c_mv is %f\n", c_mv_c);
+    printf("c_mv = %f\n", c_mv_c);
 
     return 0;
 }

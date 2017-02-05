@@ -1,6 +1,6 @@
 //------------------------------------------------------
 // module  : Tp-IFT2425-II.1.c
-// author  : FranÁois Poitras & Guillaume NoÎl-Martel
+// author  : Fran√ßois Poitras & Guillaume No√´l-Martel
 // date    :
 // version : 1.0
 // language: C
@@ -63,7 +63,7 @@ int open_display()
 
 /************************************************************************/
 /* FABRIQUE_WINDOW()                                                    */
-/* Cette fonction crÈe une fenetre X et l'affiche ‡ l'Ècran.            */
+/* Cette fonction cr√©e une fenetre X et l'affiche √† l'√©cran.            */
 /************************************************************************/
 Window fabrique_window(char *nom_fen, int x, int y, int width, int height, int zoom)
 {
@@ -107,7 +107,7 @@ Window fabrique_window(char *nom_fen, int x, int y, int width, int height, int z
 
 /****************************************************************************/
 /* CREE_XIMAGE()                                                            */
-/* CrÈe une XImage ‡ partir d'un tableau de float                           */
+/* Cr√©e une XImage √† partir d'un tableau de float                           */
 /* L'image peut subir un zoom.                                              */
 /****************************************************************************/
 XImage* cree_Ximage(float** mat, int z, int length, int width)
@@ -127,7 +127,7 @@ XImage* cree_Ximage(float** mat, int z, int length, int width)
 		dat = (unsigned char*) malloc(lgth * (wdth * 4) * sizeof(unsigned char));
 		if (dat == NULL)
 		{
-			printf("Impossible d'allouer de la memoire.");
+			printf("Impossible d'allouer de la m√©moire.\n");
 			exit(-1);
 		}
 
@@ -155,7 +155,7 @@ XImage* cree_Ximage(float** mat, int z, int length, int width)
 		dat = (unsigned char*)malloc(lgth * (wdth * 4) * sizeof(unsigned char));
 		if (dat == NULL)
 		{
-			printf("Impossible d'allouer de la memoire.");
+			printf("Impossible d'allouer de la m√©moire.\n");
 			exit(-1);
 		}
 
@@ -184,7 +184,7 @@ XImage* cree_Ximage(float** mat, int z, int length, int width)
 //-- Matrice de Flottant --//
 //-------------------------//
 //---------------------------------------------------------
-//  alloue de la memoire pour une matrice 1d de float
+//  alloue de la m√©moire pour une matrice 1d de float
 //----------------------------------------------------------
 float* fmatrix_allocate_1d(int hsize)
 {
@@ -194,7 +194,7 @@ float* fmatrix_allocate_1d(int hsize)
 }
 
 //----------------------------------------------------------
-//  alloue de la memoire pour une matrice 2d de float
+//  alloue de la m√©moire pour une matrice 2d de float
 //----------------------------------------------------------
 float** fmatrix_allocate_2d(int vsize, int hsize)
 {
@@ -209,13 +209,13 @@ float** fmatrix_allocate_2d(int vsize, int hsize)
 }
 
 //----------------------------------------------------------
-// libere la memoire de la matrice 1d de float
+// lib√®re la m√©moire de la matrice 1d de float
 //----------------------------------------------------------
 void free_fmatrix_1d(float* pmat)
 { delete[] pmat; }
 
 //----------------------------------------------------------
-// libere la memoire de la matrice 2d de float
+// lib√®re la m√©moire de la matrice 2d de float
 //----------------------------------------------------------
 void free_fmatrix_2d(float** pmat)
 {	delete[] (pmat[0]);
@@ -240,16 +240,16 @@ void SaveImagePgm(char* bruit, char* name, float** mat, int lgth, int wdth)
 	fic = fopen(buff, "wb");
 	if (fic == NULL)
 	{
-		printf("Probleme dans la sauvegarde de %s", buff);
+		printf("Probleme dans la sauvegarde de %s\n", buff);
 		exit(-1);
 	}
-	printf("\nSauvegarde de %s au format pgm\n", buff);
+	printf("Sauvegarde de %s au format pgm\n", buff);
 
 	//--sauvegarde de l'entete--
-	fprintf(fic, "P5");
-	fprintf(fic, "\n# IMG Module");
-	fprintf(fic, "\n%d %d", wdth, lgth);
-	fprintf(fic, "\n255\n");
+	fprintf(fic, "P5\n");
+	fprintf(fic, "# IMG Module\n");
+	fprintf(fic, "%d %d\n", wdth, lgth);
+	fprintf(fic, "255\n");
 
 	//--enregistrement--
 	for (i = 0; i < lgth; i++)
@@ -341,7 +341,6 @@ void Egalise(float** img, int lgth, int wdth, int thresh)
 			img[i][j] = FnctRept[(int)(img[i][j])];
 }
 
-
 //----------------------------------------------------------
 //----------------------------------------------------------
 // PROGRAMME PRINCIPAL -------------------------------------
@@ -375,10 +374,26 @@ int main(int argc, char** argv)
 	// PROGRAMME ---------------------------------------------------------------------
 	//--------------------------------------------------------------------------------
 
-	//Affichage dÈgradÈ de niveaux de gris dans Graph2D
+	//Affichage l'ensemble de Mandelbrot dans Graph2D
+	int nbIterMax = 200;
 	for (int i = 0; i < length; i++)
-		for (int j = 0; j < width; j++)
-			Graph2D[i][j] = j / 2.0;
+		loop: for (int j = 0; j < width; j++)
+		{
+			double x_k = 2.0 * (j - width / 1.35) / (width - 1);
+			double y_l = 2.0 * (i - length / 2.0) / (length - 1);
+
+			double c_x = x_k, c_j = y_l;
+			double z_x = 0, z_j = 0;
+			bool diverges = false;
+			for (int iter = 0; iter < nbIterMax; iter++)
+			{
+				double tmp_x = CARRE(z_x) - CARRE(z_j) + c_x;
+				double tmp_j = 2 * z_x * z_j + c_j;
+				if (CARRE(tmp_x) + CARRE(tmp_j) > 2.0) { diverges = true; break; }
+				else { z_x = tmp_x; z_j = tmp_j; }
+			}
+			Graph2D[i][j] = diverges ? 255.0 : 0.0;
+		}
 
 	//--------------------------------------------------------------------------------
 	//---------------- visu sous XWINDOW ---------------------------------------------
@@ -392,7 +407,7 @@ int main(int argc, char** argv)
 	{
 		//ouverture session graphique
 		if (open_display() < 0)
-			printf("Impossible d'ouvrir une session graphique");
+			printf("Impossible d'ouvrir une session graphique\n");
 
 		sprintf(nomfen_ppicture, "Graphe : ");
 		win_ppicture = fabrique_window(nomfen_ppicture, 10, 10, width, length, zoom);
@@ -400,7 +415,7 @@ int main(int argc, char** argv)
 
 		//Sauvegarde
 		SaveImagePgm((char*)"", (char*)"FractalMandelbrot", Graph2D, length, width);
-		printf("\n\nPour quitter,appuyer sur la barre d'espace");
+		printf("Pour quitter, appuyer sur une touche\n");
 		fflush(stdout);
 
 		//boucle d'evenements
@@ -427,6 +442,6 @@ int main(int argc, char** argv)
 	}
 
 	//retour sans probleme
-	printf("\nFini...\n\n\n");
+	printf("Fini\n");
 	return 0;
 }
