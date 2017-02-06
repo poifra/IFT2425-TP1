@@ -376,23 +376,36 @@ int main(int argc, char** argv)
 
 	//Affichage l'ensemble de Mandelbrot dans Graph2D
 	int nbIterMax = 200;
-	for (int i = 0; i < length; i++)
-		for (int j = 0; j < width; j++)
+	double* x_buff = new double[nbIterMax];
+	double* j_buff = new double[nbIterMax];
+	for (double i = 0; i < length; i += 0.1)
+		for (double j = 0; j < width; j += 0.1)
 		{
-			double x_k = 2.0 * (j - width / 1.35) / (width - 1);
-			double y_l = 2.0 * (i - length / 2.0) / (length - 1);
-
-			double c_x = x_k, c_j = y_l;
-			double z_x = 0, z_j = 0;
-			bool diverges = false;
+			double
+				c_x = 2.0 * (j - width / 1.35) / (width - 1),
+				c_j = 2.0 * (i - length / 2.0) / (length - 1),
+				z_x = 0,
+				z_j = 0;
 			for (int iter = 0; iter < nbIterMax; iter++)
 			{
 				double tmp_x = CARRE(z_x) - CARRE(z_j) + c_x;
 				double tmp_j = 2 * z_x * z_j + c_j;
-				if (CARRE(tmp_x) + CARRE(tmp_j) > 2.0) { diverges = true; break; }
+				if (CARRE(tmp_x) + CARRE(tmp_j) > 2.0)
+				{
+					for (int sub = 0; sub < iter; sub++)
+					{
+						int pt_j = x_buff[sub] * (width - 1) / 2.0 + (width / 1.35);
+						int pt_i = j_buff[sub] * (length - 1) / 2.0 + (length / 2.0);
+						if (pt_i < 0 || pt_i >= length || pt_j < 0 || pt_j >= width)
+							continue;
+						Graph2D[pt_i][pt_j] += 1;
+					}
+					break;
+				}
 				else { z_x = tmp_x; z_j = tmp_j; }
+				x_buff[iter] = z_x;
+				j_buff[iter] = z_j;
 			}
-			Graph2D[i][j] = diverges ? 255.0 : 0.0;
 		}
 
 	//--------------------------------------------------------------------------------
