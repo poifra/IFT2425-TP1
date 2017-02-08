@@ -400,7 +400,7 @@ int main(int argc, char** argv)
 				int pt_j = x_buff[sub] * (width - 1) / 2.0 + (width / 1.35);
 				int pt_i = j_buff[sub] * (length - 1) / 2.0 + (length / 2.0);
 				if (pt_i < 0 || pt_i >= length || pt_j < 0 || pt_j >= width)
-					continue;
+					goto loop;
 				Graph2D[pt_i][pt_j] += 1;
 			}
 
