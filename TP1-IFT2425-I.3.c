@@ -95,10 +95,10 @@ int main(int argc, char** argv)
 
     double x0 = 0.25, target = 0, tolerance = 1E-6;
 
-    printf("Évaluation de c_mv à l'aide de l'algorithme de Newton pour une dérivée sur un epsilon simple:\n");
+    printf("Évaluation de c_mv à l'aide de l'algorithme de Newton pour la dérivée analytique:\n");
 
-    double c_mv_a = approx_newton(*df_epsilon_a, y, N, x0, target, tolerance);
-    printf("c_mv = %f\n", c_mv_a);
+    double c_mv_c = approx_newton(*df, y, N, x0, target, tolerance);
+    printf("c_mv = %f\n", c_mv_c);
 
     return 0;
 }

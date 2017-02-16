@@ -414,7 +414,7 @@ int main(int argc, char** argv)
 		x_ppicture = cree_Ximage(Graph2D, zoom, length, width);
 
 		//Sauvegarde
-		SaveImagePgm((char*)"", (char*)"FractalMandelbrot", Graph2D, length, width);
+		SaveImagePgm((char*)"", (char*)"FractalMandelbrot_QII.1", Graph2D, length, width);
 		printf("Pour quitter, appuyer sur une touche\n");
 		fflush(stdout);
 
